@@ -2,6 +2,7 @@
 # Example specs from Cypress
 # -------------------------------------------------
 cypress/integration/examples
+cypress/fixtures/example.json
 
 # -------------------------------------------------
 # Misc CSS Caching
