@@ -1,0 +1,17 @@
+{
+  "name": "inst377-fa2020",
+  "version": "1.0.0",
+  "description": "Repository for INST377 Dynamic Web Applications Fall 2020 at UMD",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/cypress open"
+  },
+  "author": "Alex Leitch",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^4.9.0",
+    "eslint": "^7.3.1",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
+  }
+}
