@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "Repository for INST377 Dynamic Web Applications Fall 2020 at UMD",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "node_modules/.bin/cypress open"
+    "test": "node_modules/.bin/cypress open",
+    "start": "nodemon server.js"
   },
   "author": "Alex Leitch",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^4.9.0",
-    "eslint": "^7.3.1",
+    "cypress": "^4.10.0",
+    "eslint": "^7.4.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
