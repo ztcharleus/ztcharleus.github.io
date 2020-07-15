@@ -15,7 +15,13 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-}
+// module.exports = (on, config) => {
+//   // `on` is used to hook into various events Cypress emits
+//   // `config` is the resolved Cypress config
+//   // htmlvalidate.install(on);
+// }
+const htmlvalidate = require("cypress-html-validate/dist/plugin");
+
+module.exports = (on) => {
+  htmlvalidate.install(on);
+};

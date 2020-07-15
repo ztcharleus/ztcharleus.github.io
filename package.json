@@ -6,17 +6,24 @@
   "type": "module",
   "scripts": {
     "test": "node_modules/.bin/cypress open",
+    "test_lab_2": "html-validate ./public/answer_key/lab_2/index.html",
     "start": "nodemon server.js"
   },
   "author": "Alex Leitch",
   "license": "ISC",
   "dependencies": {
     "cypress": "^4.10.0",
-    "eslint": "^7.4.0",
+    "cypress-html-validate": "^1.2.2",
+    "cypress-wait-until": "^1.7.1",
     "express": "^4.17.1",
+    "html-validate": "^3.0.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-cypress": "^2.11.1",
+    "eslint-plugin-import": "^2.22.0",
     "nodemon": "^2.0.4"
   }
 }
