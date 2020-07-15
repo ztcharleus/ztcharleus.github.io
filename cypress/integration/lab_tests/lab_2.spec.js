@@ -1,39 +1,37 @@
 const validation_storage_string = "lab_2_html";
 const validation_storage = `./cypress/fixtures/${validation_storage_string}.json`;
 
-before(() => {
-  cy.exec("html-validate ./public/answer_key/lab_2/index.html", {
-    failOnNonZeroExit: false,
-  }).then((result) => {
-    const splitResults = result.stdout.match(/\[\d+merror.+/g);
-    const cleanResults = splitResults.map((r) => r.replace(/\[\d+m/g, ""));
-    // const errors = results.match(/error/g);
+// before(() => {
+//   cy.exec("html-validate ./public/answer_key/lab_2/index.html", {
+//     failOnNonZeroExit: false,
+//   }).then((result) => {
+//     const splitResults = result.stdout.match(/\[\d+merror.+/g);
+//     const cleanResults = splitResults.map((r) => r.replace(/\[\d+m/g, ""));
+//     // const errors = results.match(/error/g);
 
-    // Logging to check values for debug
-    // cy.log(cleanResults.length);
-    // cleanResults.forEach(e => {
-    //   cy.log(e);
-    // })
+//     // Logging to check values for debug
+//     // cy.log(cleanResults.length);
+//     // cleanResults.forEach(e => {
+//     //   cy.log(e);
+//     // })
 
-    const blob = cleanResults.reduce((c, i) => {
-      if (i.includes("error")) {
-        c.push(i);
-      }
-      return c;
-    }, []);
+//     const blob = cleanResults.reduce((c, i) => {
+//       if (i.includes("error")) {
+//         c.push(i);
+//       }
+//       return c;
+//     }, []);
 
-    cy.writeFile(validation_storage, JSON.stringify(blob), () => {
-      cy.log("file written");
-      validation_errors = require(validation_storage);
-    });
-  });
-});
+//     cy.writeFile(validation_storage, JSON.stringify(blob), () => {
+//       cy.log("lab validation file written");
+//     });
+//   });
+// });
 
-const val_errors = require(`../../fixtures/lab_1_html.json`);
 
 describe("Lab 2", () => {
+  const val_errors = require(`../../fixtures/lab_2_html.json`);
   console.log('check val errors', val_errors);
-  // const validation_errors = require(`../fixtures/lab_2_html.json`);
   // console.log(validation_errors);
   if (val_errors.length != -1) {
     val_errors.forEach((err) => {
