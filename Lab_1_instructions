@@ -1,0 +1,34 @@
+This will be a little tricky, and needs to be done in order, or you will not be able to submit your labs for this class. If you do not submit your labs, you can't get credit for them - but more importantly, you won't be able to practice your debugging before your group project.
+
+Most of programming is debugging and very carefully following instructions. 
+
+Let's do this together.
+
+- Your node installation must be above version 13.0
+
+- Sign up for a github.com account
+- Sign up for a heroku.com account
+
+- Find and install Github Desktop if you have not already done so
+- Create a new repository called "your-name-inst377" on your github Desktop
+- Push it to your github account
+- In your Heroku account, connect to your new Github repository so that it can "deploy" automatically to the internet.
+
+- Are there easier ways to do this at the start?
+--- Yeah, but they make it _way_ harder later on.
+
+- Great, now you're ready to start your lab.
+
+
+LAB PROBLEMS:
+
+- This lab comes from this page: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics
+- Create an HTML page.
+
+Your page must have:
+- An appropriate head and body tag
+- An H1 header with your name in it
+- A paragraph with 50 words of lorem ipsum in it
+- An unordered list with three elements in it, containing fruit or vegetable names from a list.
+- A PNG image of something cute, formatted so that it is not warped
+- A correctly-formatted link to the UMD homepage
