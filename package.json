@@ -17,7 +17,8 @@
     "cypress-wait-until": "^1.7.1",
     "express": "^4.17.1",
     "html-validate": "^3.0.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "recursive-readdir": "^2.2.2"
   },
   "devDependencies": {
     "eslint": "^7.4.0",
