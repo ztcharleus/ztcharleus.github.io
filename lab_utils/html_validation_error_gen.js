@@ -33,9 +33,9 @@ function cleanTerminalOutput(string) {
   return d.map((m) => m.trim());
 }
 
-async function processHTML(fileName) {
+async function processHTML(filename) {
   // fire HTML-Validate process
-  const ls = await execPr(`npx html-validate "./${fileName}"`)
+  const ls = await execPr(`npx html-validate "./${filename}"`)
     .catch((err) => {
       // NB: for whatever reason, .exec sees NPX as failing? This error is in Node itself.
       if(err.stdout){
@@ -44,13 +44,15 @@ async function processHTML(fileName) {
     });
   // get the string from the process
   const terminalOutput = ls.toString();
-  return cleanTerminalOutput(terminalOutput);
+  const errorCollection = cleanTerminalOutput(terminalOutput);
+  return {
+    filename,
+    errorCollection
+  }
 }
 
 // // Write the file
-// return writeFile(
-//   `./cypress/fixtures/tempFileName.json`,
-//   JSON.stringify(textArray)
+
 // ).then((err) => {
 //   return "Success";
 // });
@@ -69,6 +71,41 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
     // write them to a cypress fixture
     // put all string values re labs into a config file
   })
+  .then((data) => data.filter(f => f.errorCollection.length > 0))
   .then((data) => {
+    console.log("Data with errors", data);
+    return data.map(m => {
+      m.title = m.filename.match(/lab_\d+/g);
+      return m;
+    })
+  })
+  .then((data) => {
+    return Promise.all(
+      data.map((m) => {
+        // now we have to write out every one of these
+        // to a fixture file
+        // and return a collection of successes or failures
+        // parse the actual filename out of the filename - it's the last folder before index.html
+        return writeFile(
+          `./cypress/fixtures/generated/${m.title}.json`,
+          JSON.stringify(m.errorCollection)
+      )}
+    ))
+  }).then((data) => {
     console.log(data);
-  });
+  })    
+    
+    // return Promise.all(
+    //   dataWithErrors.map((m) => {
+    //     // now we have to write out every one of these
+    //     // to a fixture file
+    //     // and return a collection of successes or failures
+    //     // parse the actual filename out of the filename - it's the last folder before index.html
+    //     return writeFile(
+    //       `./cypress/fixtures/tempFileName.json`, // TKTKTK fix this
+    //       JSON.stringify(m.errorCollection)
+    //   )}
+    // ))
+    // .then((data) => {
+    //   console.log(data);
+    // })
