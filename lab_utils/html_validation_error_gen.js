@@ -1,6 +1,6 @@
 "use strict";
 
-import { spawnSync, spawn, exec } from "child_process";
+import { exec } from "child_process";
 import util from "util";
 import fs from "fs";
 import path from "path";
@@ -35,77 +35,59 @@ function cleanTerminalOutput(string) {
 
 async function processHTML(filename) {
   // fire HTML-Validate process
-  const ls = await execPr(`npx html-validate "./${filename}"`)
-    .catch((err) => {
-      // NB: for whatever reason, .exec sees NPX as failing? This error is in Node itself.
-      if(err.stdout){
-        return err.stdout
-      }
-    });
+  const ls = await execPr(`npx html-validate "./${filename}"`).catch((err) => {
+    // NB: for whatever reason, .exec sees NPX as failing? This error is in Node itself.
+    if (err.stdout) {
+      return err.stdout;
+    }
+  });
   // get the string from the process
   const terminalOutput = ls.toString();
   const errorCollection = cleanTerminalOutput(terminalOutput);
   return {
     filename,
-    errorCollection
-  }
+    errorCollection,
+  };
 }
-
-// // Write the file
-
-// ).then((err) => {
-//   return "Success";
-// });
 
 recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
   .then((data) => {
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
-    console.log("FILENAMES TO PROCESS", data);
-    return Promise.all(data.map(m => {
-      return processHTML(m);
-    }))
-
-    // todo
-    // write file
-    // write them to a cypress fixture
-    // put all string values re labs into a config file
+    // console.log("FILENAMES TO PROCESS", data);
+    return Promise.all(
+      data.map((m) => {
+        return processHTML(m);
+      })
+    );
   })
-  .then((data) => data.filter(f => f.errorCollection.length > 0))
+  .then((data) => data.filter((f) => f.errorCollection.length > 0))
   .then((data) => {
-    console.log("Data with errors", data);
-    return data.map(m => {
+    if(data.length > 0){
+      // console.log("HTML validation errors found", data);
+    }
+    return data.map((m) => {
       m.title = m.filename.match(/lab_\d+/g);
       return m;
-    })
+    });
   })
   .then((data) => {
     return Promise.all(
       data.map((m) => {
-        // now we have to write out every one of these
-        // to a fixture file
-        // and return a collection of successes or failures
-        // parse the actual filename out of the filename - it's the last folder before index.html
         return writeFile(
           `./cypress/fixtures/generated/${m.title}.json`,
           JSON.stringify(m.errorCollection)
-      )}
-    ))
-  }).then((data) => {
-    console.log(data);
-  })    
-    
-    // return Promise.all(
-    //   dataWithErrors.map((m) => {
-    //     // now we have to write out every one of these
-    //     // to a fixture file
-    //     // and return a collection of successes or failures
-    //     // parse the actual filename out of the filename - it's the last folder before index.html
-    //     return writeFile(
-    //       `./cypress/fixtures/tempFileName.json`, // TKTKTK fix this
-    //       JSON.stringify(m.errorCollection)
-    //   )}
-    // ))
-    // .then((data) => {
-    //   console.log(data);
-    // })
+        ).catch(error => console.log("write error", err));
+      })
+    );
+  })
+  .then((data) => {
+    console.log("Preliminary HTML validation check complete");
+    if(data.length > 0) {
+      const str = (data.length === 1) ? 'document has' : 'documents have';
+      console.log(data.length, `${str} errors`);
+      console.log("Check out Cypress for your errors!");
+    } else {
+      console.log("No invalid HTML detected");
+    }
+  });
