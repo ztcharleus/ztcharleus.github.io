@@ -4,12 +4,10 @@ import { spawnSync, spawn } from "child_process";
 import util from "util";
 import fs from "fs";
 import path from "path";
-import process from "process";
 import recursiveReaddir from "recursive-readdir";
 
 const writeFile = util.promisify(fs.writeFile);
 
-console.log(process.argv);
 // Get the file name we're working on
 // I want to walk a folder for things to validate
 // process out the errors for ALL HTML files using this
@@ -28,36 +26,35 @@ function excludeAnswerKey(file, stats) {
   // return stats.isDirectory() && path.basename(file) == "answer_key";
 }
 
+function cleanTerminalOutput(string) {
+  const nS1 = string.split("\n");
+  const d = nS1.filter((f) => f.match(/\d+:\d+/g));
+  return d.map((m) => m.trim());
+}
+
 async function processHTML(fileName) {
-  // fire HTML-Validate
-  const ls = await spawn("npx", ["html-validate", `./${fileName}`]);
+  // fire HTML-Validate process
+  const ls = spawnSync("npx", ["html-validate", `./${fileName}`]);
   
   // get the string from the process
-  const newString = ls.stdout.toString();
-
-  // String processing
-  const nS1 = newString.split("\n");
-  const d = nS1.filter((f) => f.match(/\d+:\d+/g));
-  const prune = d.map((m) => m.trim());
-  console.log(prune);
+  const terminalOutput = ls.stdout.toString();
+  const textArray = cleanTerminalOutput(terminalOutput);
 
   // Write the file
-  return writeFile( `./cypress/fixtures/tempFileName.json`, JSON.stringify(prune))
-    .then((err) => {
-        return "Success"
-    });
+  return writeFile(
+    `./cypress/fixtures/tempFileName.json`,
+    JSON.stringify(textArray)
+  ).then((err) => {
+    return "Success";
+  });
 }
 
 recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
   .then((data) => {
-    console.log("readDir data", data);
-    return data;
-  })
-  .then((data) => {
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
 
-    return processHTML('public/answer_key/lab_2/index.html');
+    return processHTML("public/answer_key/lab_2/index.html");
 
     // todo
     // write file
