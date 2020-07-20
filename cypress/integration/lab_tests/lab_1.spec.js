@@ -1,6 +1,8 @@
 describe("Lab 1", () => {
   it("Successfully loads", () => {
-    cy.visit("/lab_1/"); // change URL to match your dev URL
+    cy.fixture("test_values").then((json) => {
+      cy.visit(`${json.document_prefix}/lab_1/`); // change URL to match your dev URL
+    })
   });
 
   it("Contains a head tag and page title with your name in it", () => {
@@ -9,6 +11,7 @@ describe("Lab 1", () => {
         .contains(json.name);
     });
   });
+  
   it("Contains a header element with your name in it", () => {
     cy.fixture("test_values").then((json) => {
       cy.get("body h1")
