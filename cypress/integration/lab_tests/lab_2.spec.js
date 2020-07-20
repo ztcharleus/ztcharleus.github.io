@@ -1,51 +1,40 @@
 const validation_storage_string = "lab_2_html";
 const validation_storage = `./cypress/fixtures/${validation_storage_string}.json`;
 
-// before(() => {
-//   cy.exec("html-validate ./public/answer_key/lab_2/index.html", {
-//     failOnNonZeroExit: false,
-//   }).then((result) => {
-//     const splitResults = result.stdout.match(/\[\d+merror.+/g);
-//     const cleanResults = splitResults.map((r) => r.replace(/\[\d+m/g, ""));
-//     // const errors = results.match(/error/g);
-
-//     // Logging to check values for debug
-//     // cy.log(cleanResults.length);
-//     // cleanResults.forEach(e => {
-//     //   cy.log(e);
-//     // })
-
-//     const blob = cleanResults.reduce((c, i) => {
-//       if (i.includes("error")) {
-//         c.push(i);
-//       }
-//       return c;
-//     }, []);
-
-//     cy.writeFile(validation_storage, JSON.stringify(blob), () => {
-//       cy.log("lab validation file written");
-//     });
-//   });
-// });
-
+function headAndBodyCheck(str) {
+  return str.includes('element-required-content');
+}
 
 describe("Lab 2", () => {
-  const val_errors = require(`../../fixtures/lab_2_html.json`);
-  console.log('check val errors', val_errors);
-  // console.log(validation_errors);
-  if (val_errors.length != -1) {
+  const val_errors = require(`../../fixtures/generated/lab_2.json`);
+
+
+  it(`Should contain valid HTML, you have ${val_errors.length} known validation errors`, () => {
+    expect(val_errors.length).to.equal(0);
+  });
+
+  // TODO: WRITE OUT VALIDATION ERRORS IN A LEGIBLE FORMAT
+  // Guidelines: https://docs.cypress.io/api/cypress-api/cypress-log.html#Examples\
+
+
+
+  if (val_errors.length > 0) {
     val_errors.forEach((err) => {
-      it(err, () => {
-        expect(err).to.be.undefined;
-      });
+      const headOrBodyError = headAndBodyCheck(err);
+      if(headOrBodyError) {
+        it(`Must have a valid basic page structure - check your Head or Body tag`, () => {
+          expect(err).to.be.undefined;
+        })
+      }
+      // it(`HTML Validation Error ${err}`, () => {
+      //   expect(err).to.be.undefined;
+      // });
     });
   }
 
   it("Successfully loads", () => {
     cy.visit("/answer_key/lab_2/"); // change URL to match your dev URL
   });
-
-  it("Should contain valid HTML", () => {});
 
   // it("Contains a correctly structured head and body", () => {
   //   cy.fixture("test_values").then((json) => {
