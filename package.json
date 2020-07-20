@@ -5,13 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node lab_utils/html_validation_error_gen.js && node_modules/.bin/cypress open",
-    "test_lab_2": "html-validate ./public/answer_key/lab_2/index.html",
+    "test": "node lab_utils/html_validation_error_gen.js",
+    "test2": "node lab_utils/html_validation_error_gen.js && node_modules/.bin/cypress open",
     "start": "nodemon server.js"
   },
   "author": "Alex Leitch",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^4.1.0",
     "cypress": "^4.10.0",
     "cypress-html-validate": "^1.2.2",
     "cypress-wait-until": "^1.7.1",
