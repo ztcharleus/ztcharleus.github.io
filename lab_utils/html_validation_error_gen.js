@@ -5,7 +5,7 @@ import util from "util";
 import fs from "fs";
 import path from "path";
 import recursiveReaddir from "recursive-readdir";
-import { Console } from "console";
+import chalk from 'chalk';
 
 const writeFile = util.promisify(fs.writeFile);
 const execPr = util.promisify(exec);
@@ -38,10 +38,40 @@ function headAndBodyCheck(str) {
   return str.includes("element-required-content");
 }
 
-const errorTypes = {
-  0: "You have a problem with your basic page structure. Check how your <html>, <head>, and <body> tags are written, and re-test your work.",
-  1: "You have some HTML validation errors.",
-};
+function severeErrorCheck(arr) {
+  // do some warnings in case some errors are severe
+  arr.forEach((d) => {
+    const errors = d.errorCollection.filter((f) =>
+      f.includes("element-required-content")
+    );
+    if (errors.length > 0) {
+      console.log(
+        chalk.red(`You have serious structural problems in your HTML for ${chalk.bold(d.title)}.`)
+      );
+      console.log("Please correct them before attempting the lab problems.");
+      const messages = errors.map((err) =>
+        err
+          .split("  ")
+          .map(m => m.trim())
+          .filter((f) => f.length > 0 && f !== 'error')
+          .reduce((acc, curr, idx) => {
+            const idxChr = {
+              0: "Line number",
+              1: "Error",
+              2: "Error Type"
+            };
+            acc[idxChr[idx]] = curr
+            return acc;
+          }, {})
+      );
+      console.table(messages);
+    }
+  });
+
+  return arr;
+}
+
+const stringOutput = {};
 
 async function processHTML(filename) {
   // fire HTML-Validate process
@@ -64,40 +94,16 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
   .then((data) => {
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
-    return Promise.all(
-      data.map((m) => processHTML(m))
-    );
+    return Promise.all(data.map((m) => processHTML(m)));
   })
   .then((data) => data.filter((f) => f.errorCollection.length > 0))
-  .then((data) => data.map((m) => {
-    m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
-    return m;
-  }))
-  .then((data) => {
-    // data here is all files with errors
-    // gotta forEach it
-    if (!Array.isArray(data)) {
-      console.log("ERROR, not an array");
-    }
-    
-    data.forEach((d) => {
-      // do some warnings in case some errors are severe
-      const errors = d.errorCollection.filter((f) =>
-        f.includes("element-required-content")
-      );
-        
-      console.log(errors);
-      if (errors.length > 0) {
-        console.log("You have serious structural problems in your HTML.");
-        console.log("Please correct them before attempting the lab problems.");
-        errors.forEach((err) => {
-          console.log(err);
-        });
-      }
-    });
-
-    return data;
-  })
+  .then((data) =>
+    data.map((m) => {
+      m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
+      return m;
+    })
+  )
+  .then((data) => severeErrorCheck(data))
   .then((data) => {
     return Promise.all(
       data.map((m) => {
