@@ -5,6 +5,7 @@ import util from "util";
 import fs from "fs";
 import path from "path";
 import recursiveReaddir from "recursive-readdir";
+import { Console } from "console";
 
 const writeFile = util.promisify(fs.writeFile);
 const execPr = util.promisify(exec);
@@ -33,6 +34,15 @@ function cleanTerminalOutput(string) {
   return d.map((m) => m.trim());
 }
 
+function headAndBodyCheck(str) {
+  return str.includes("element-required-content");
+}
+
+const errorTypes = {
+  0: "You have a problem with your basic page structure. Check how your <html>, <head>, and <body> tags are written, and re-test your work.",
+  1: "You have some HTML validation errors.",
+};
+
 async function processHTML(filename) {
   // fire HTML-Validate process
   const ls = await execPr(`npx html-validate "./${filename}"`).catch((err) => {
@@ -54,22 +64,39 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
   .then((data) => {
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
-    // console.log("FILENAMES TO PROCESS", data);
     return Promise.all(
-      data.map((m) => {
-        return processHTML(m);
-      })
+      data.map((m) => processHTML(m))
     );
   })
   .then((data) => data.filter((f) => f.errorCollection.length > 0))
+  .then((data) => data.map((m) => {
+    m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
+    return m;
+  }))
   .then((data) => {
-    if(data.length > 0){
-      // console.log("HTML validation errors found", data);
+    // data here is all files with errors
+    // gotta forEach it
+    if (!Array.isArray(data)) {
+      console.log("ERROR, not an array");
     }
-    return data.map((m) => {
-      m.title = m.filename.match(/lab_\d+/g);
-      return m;
+    
+    data.forEach((d) => {
+      // do some warnings in case some errors are severe
+      const errors = d.errorCollection.filter((f) =>
+        f.includes("element-required-content")
+      );
+        
+      console.log(errors);
+      if (errors.length > 0) {
+        console.log("You have serious structural problems in your HTML.");
+        console.log("Please correct them before attempting the lab problems.");
+        errors.forEach((err) => {
+          console.log(err);
+        });
+      }
     });
+
+    return data;
   })
   .then((data) => {
     return Promise.all(
@@ -77,17 +104,17 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
         return writeFile(
           `./cypress/fixtures/generated/${m.title}.json`,
           JSON.stringify(m.errorCollection)
-        ).catch(error => console.log("write error", err));
+        ).catch((error) => console.log("write error", err));
       })
     );
   })
   .then((data) => {
     console.log("Preliminary HTML validation check complete");
-    if(data.length > 0) {
-      const str = (data.length === 1) ? 'document has' : 'documents have';
+    if (data.length > 0) {
+      const str = data.length === 1 ? "document has" : "documents have";
       console.log(data.length, `${str} errors`);
-      console.log("Check out Cypress for your errors!");
     } else {
       console.log("No invalid HTML detected");
     }
-  });
+  })
+  .catch((err) => console.log(err));
