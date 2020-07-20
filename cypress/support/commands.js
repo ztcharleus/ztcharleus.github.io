@@ -23,4 +23,19 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-import 'cypress-wait-until';
+
+Cypress.Commands.add("logBasicHTMLErrors", (key, value) => {
+  const log = Cypress.log({
+    name: "sampleHTMLError",
+    displayName: "HTML Validation Error",
+    message: `${key}, ${value}`,
+    consoleProps: () => {
+      return {
+        Key: key,
+        Value: value,
+      };
+    },
+  });
+});
+
+import "cypress-wait-until";
