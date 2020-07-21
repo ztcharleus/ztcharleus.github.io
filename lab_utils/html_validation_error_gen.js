@@ -1,6 +1,5 @@
 "use strict";
-// import util from "util";
-// import fs from "fs";
+import { spawn } from "child_process";
 
 import recursiveReaddir from "recursive-readdir";
 import chalk from "chalk";
@@ -11,18 +10,6 @@ import {
   excludeAnswerKey,
   severeErrorCheck
 } from "./functions.js";
-
-// const writeFile = util.promisify(fs.writeFile);
-
-// Get the file name we're working on
-// I want to walk a folder for things to validate
-// process out the errors for ALL HTML files using this
-// and then in the tests only retrieve the errors for the file someone is currently working on
-
-// First, we're going to get the argument off the node command
-// Then we're going to get that as a folder name?
-// then we'll loop the public folder and process all HTML documents we find
-// we'll need a delimiter to block more than 15 found documents
 
 const stringOutput = {};
 
@@ -41,13 +28,12 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
   )
   .then((data) => data.map((m) => severeErrorCheck(m)))
   .then((data) => {
-    // DO YOUR OUTPUTS
     console.log(
       chalk.bgCyan.bold("Preliminary HTML validation check complete")
     );
     // if any document has severe errors, list it and put it in a table
     // and block cypress launch
-    let blockCypress;
+    let blockCypress; // TODO: add a cypress launch
 
     if (data.length > 0) {
       const str = data.length === 1 ? "document has" : "documents have";
@@ -60,6 +46,7 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
 
       data.forEach((d) => {
         if (d.severe.length > 0) {
+          blockCypress = true;
           console.log('\n')
           console.log(chalk.red.bold(`${d.title} has breaking errors`))
           console.table(d.severe);
@@ -76,15 +63,9 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
       );
     }
 
-    // we may not need to write these files if we're doing Head checks before
-    // we allow Cypress to open at all.
-    // return Promise.all(
-    //   data.map((m) => {
-    //     return writeFile(
-    //       `./cypress/fixtures/generated/${m.title}.json`,
-    //       JSON.stringify(m.errors)
-    //     ).catch((error) => console.log("write error", err));
-    //   })
-    // );
+    if(!blockCypress){
+      spawn("node_modules/.bin/cypress", ["open"]);
+      // spawn("npx", ["nodemon","server.js"]);
+    }
   })
   .catch((err) => console.log(err));
