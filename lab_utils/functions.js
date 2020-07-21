@@ -15,29 +15,28 @@ async function processHTML(filename) {
   });
   // get the string from the process
   const terminalOutput = ls.toString();
-  const errorCollection = cleanTerminalOutput(terminalOutput);
+  const errors = cleanTerminalOutput(terminalOutput);
   return {
     filename,
-    errorCollection,
+    errors,
   };
 }
 
-
 function errorToObject(err) {
-    return err
+  return err
     .split("  ")
     .map((m) => m.trim())
     .filter((f) => f.length > 0 && f !== "error")
     .reduce((acc, curr, idx) => {
       const idxChr = {
-        0: "Line number",
+        0: "Line number in editor",
         1: "Error",
         2: "Error Type",
       };
       acc[idxChr[idx]] = curr;
       return acc;
-    }, {})
-  }
+    }, {});
+}
 
 function excludeNonHTML(file, stats) {
   return path.extname(file).length && path.extname(file) !== ".html";
@@ -52,12 +51,37 @@ function cleanTerminalOutput(string) {
   const nS1 = string.split("\n");
   const d = nS1.filter((f) => f.match(/\d+:\d+/g));
   const arr = d.map((m) => m.trim());
-  return arr.map(m => errorToObject(m));
+  return arr.map((m) => errorToObject(m));
+}
+
+function partition(array, isValid) {
+  return array.reduce(
+    ([pass, fail], elem) => {
+      return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
+    },
+    [[], []]
+  );
+}
+
+function severeErrorTest(f) {
+  return f["Error Type"] === "element-required-content";
+}
+
+function severeErrorCheck(document) {
+  const splitArray = partition(document.errors, severeErrorTest);
+  return {
+    ...document,
+    errors: splitArray[1],
+    severe: splitArray[0],
+  };
 }
 
 export {
   processHTML,
   excludeNonHTML,
   excludeAnswerKey,
-  cleanTerminalOutput
+  cleanTerminalOutput,
+  partition,
+  severeErrorTest,
+  severeErrorCheck
 };
