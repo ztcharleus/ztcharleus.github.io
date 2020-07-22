@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",
-    "cypress": "^4.10.0",
+    "cypress": "^4.11.0",
     "cypress-html-validate": "^1.2.2",
     "cypress-wait-until": "^1.7.1",
     "express": "^4.17.1",
