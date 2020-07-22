@@ -5,6 +5,7 @@ Most of programming is debugging and very carefully following instructions.
 Let's do this together.
 
 - Your node installation must be above version 13.0
+    - To check your version of Node.js, open Terminal (or another CLI), and type the command node -v. Press Enter. 
 
 - Sign up for a github.com account
 - Sign up for a heroku.com account
@@ -12,7 +13,10 @@ Let's do this together.
 - Find and install Github Desktop if you have not already done so
 - Create a new repository called "your-name-inst377" on your github Desktop
 - Push it to your github account
-- In your Heroku account, connect to your new Github repository so that it can "deploy" automatically to the internet.
+
+- In your Heroku account, create a new app called "your-name-inst377"
+- Authorize your Github account to be your primary Deployment method
+- Connect your new Github repository to your new app in Heroku so that it can "deploy" automatically to the internet.
 
 - Are there easier ways to do this at the start?
 --- Yeah, but they make it _way_ harder later on.
@@ -22,8 +26,9 @@ Let's do this together.
 
 LAB PROBLEMS:
 
-- This lab comes from this page: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics
-- Create an HTML page.
+- This lab comes from this page, read thoroughly to ensure you have a solid understanding of the Anatomy of an HTML document before beginning: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics
+
+- From Github Desktop, open Visual Studio Code and create an HTML page.
 
 Your page must have:
 - An appropriate head and body tag
@@ -32,3 +37,18 @@ Your page must have:
 - An unordered list with three elements in it, containing fruit or vegetable names from a list.
 - A PNG image of something cute, formatted so that it is not warped
 - A correctly-formatted link to the UMD homepage
+
+Once you have completed all the steps, push your changes through Github Desktop.
+
+
+
+
+
+
+
+
+
+Resources
+
+Create a Repo - https://docs.github.com/en/enterprise/2.16/user/github/getting-started-with-github/create-a-repo
+HTML Basics - https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics
