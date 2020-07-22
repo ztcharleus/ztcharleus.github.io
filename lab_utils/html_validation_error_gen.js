@@ -65,7 +65,6 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
 
     if(!blockCypress){
       spawn("node_modules/.bin/cypress", ["open"]);
-      // spawn("npx", ["nodemon","server.js"]);
     }
   })
   .catch((err) => console.log(err));
