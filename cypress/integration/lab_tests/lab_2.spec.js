@@ -1,57 +1,62 @@
-const validation_storage_string = "lab_2_html";
-const validation_storage = `./cypress/fixtures/${validation_storage_string}.json`;
-
 function headAndBodyCheck(str) {
-  return str.includes('element-required-content');
+  return str.includes("element-required-content");
 }
 
 describe("Lab 2", () => {
-  const val_errors = require(`../../fixtures/generated/lab_2.json`);
-
-
-  it(`Should contain valid HTML, you have ${val_errors.length} known validation errors`, () => {
-    expect(val_errors.length).to.equal(0);
-  });
-
+  const labUrl = "/answer_key/lab_2/";
   // TODO: WRITE OUT VALIDATION ERRORS IN A LEGIBLE FORMAT
   // Guidelines: https://docs.cypress.io/api/cypress-api/cypress-log.html#Examples\
 
-
-
-  if (val_errors.length > 0) {
-    val_errors.forEach((err) => {
-      const headOrBodyError = headAndBodyCheck(err);
-      if(headOrBodyError) {
-        it(`Must have a valid basic page structure - check your Head or Body tag`, () => {
-          expect(err).to.be.undefined;
-        })
-      }
-      // it(`HTML Validation Error ${err}`, () => {
-      //   expect(err).to.be.undefined;
-      // });
-    });
-  }
-
-  it("Successfully loads", () => {
-    cy.visit("/answer_key/lab_2/"); // change URL to match your dev URL
+  it("Successfully loads with valid HTML", () => {
+    cy.visit(labUrl); // change URL to match your dev URL
+    cy.htmlvalidate();
   });
 
-  // it("Contains a correctly structured head and body", () => {
-  //   cy.fixture("test_values").then((json) => {
-  //     cy.document().its('contentType').should('eq', 'text/html');
-  //     cy.document().then((doc) => {
-  //       console.log(doc);
-  //         expect(doc.body).to.not.undefined;
-  //         expect(doc.head).to.not.undefined;
-  //       });
-  //   });
+  it("Has meta content to reflect the page author", () => {
+    cy.fixture("test_values").then((json) => {
+      cy.get('meta[name="author"]')
+        .should(
+          "have.attr",
+          "name",
+          "author"
+        )
+        .should(
+          "have.attr",
+          "content",
+          json.name
+        )
+      });
+  });
+
+  it("Contains the correct number of address blocks", () => {
+    cy.get("address")
+    .should("have.length", 2)
+  });
+
+  it("Address blocks contain links for contact information", () => {
+    let addressCheck = cy.get("address a");
+    addressCheck.should("have.length", 2)
+    addressCheck.each(($el, i) => {
+      expect($el).to.exist;
+      expect($el).to.have.attr('href');
+      if(i === 0){
+        expect($el).to.have.attr('href').match(/tel:/g);
+      } else {
+        expect($el).to.have.attr('href').match(/mailto:/g);
+      }
+    })
+    
+    addressCheck.first()
+    .should('have.attr', 'href')
+
+    // addressCheck.last().should('have.attr', 'href')
+  })
+
+  // it("Address block contains a telephone link", () => {
+  //   cy.get("address a")
+  //     .its('href')
   // });
 
-  it("Has meta content to reflect the page author");
-  it("Has a page language set");
-
-  it("Contains the correct number of address blocks");
-  it("Address block contains a telephone link");
   it("Address block contains a mailto link");
   it("Contains appropriate use of strong tags in address block");
   it("Contains a datetime stamp within a paragraph");
