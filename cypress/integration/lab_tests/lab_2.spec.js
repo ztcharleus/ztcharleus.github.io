@@ -33,7 +33,7 @@ describe("Lab 2", () => {
     .should("have.length", 2)
   });
 
-  it("Address blocks contain links for contact information", () => {
+  it("First address block contains links for phone and e-mail information", () => {
     let addressCheck = cy.get("address a");
     addressCheck.should("have.length", 2)
     addressCheck.each(($el, i) => {
@@ -45,31 +45,69 @@ describe("Lab 2", () => {
         expect($el).to.have.attr('href').match(/mailto:/g);
       }
     })
-    
-    addressCheck.first()
-    .should('have.attr', 'href')
-
-    // addressCheck.last().should('have.attr', 'href')
   })
 
-  // it("Address block contains a telephone link", () => {
-  //   cy.get("address a")
-  //     .its('href')
-  // });
+  it("Contains appropriate use of strong tags in address block", () => {
+    cy.get('address strong')
+      .should('exist');
+  });
 
-  it("Address block contains a mailto link");
-  it("Contains appropriate use of strong tags in address block");
-  it("Contains a datetime stamp within a paragraph");
+  it("Contains a datetime stamp within a paragraph", () => {
+    cy.get('address p time')
+      .should('exist')
+      .should('have.attr', 'datetime')
+  });
 
-  it("Contains a top-level page header");
-  it("Contains at least two secondary page headers");
-  it("Contains an unordered list with three dateTimes");
+  it("Contains a top-level page header", () => {
+    cy.get('h1').contains("Re:")
+    cy.get('h1').contains("university application")
+  });
 
-  it("Contains an ordered list with three sub-entries");
-  it("Uses supertext and subtext tags appropriately");
-  it("Uses abbreviation tags appropriately");
+  it("Contains at least two secondary page headers", () => {
+    cy.get('h2').should('have.length.greaterThan', 2);
+    cy.get('h2').first().contains('dates');
+    cy.get('h2').last().contains('Animals');
+    
+  });
 
-  it("Uses supertext and subtext tags appropriately");
+  it("Contains an unordered list with three dateTimes", () => {
+    cy.get('ul').children().should('have.length', 3);
+  });
+
+  it("Contains an ordered list with three sub-entries", () => {
+    cy.get('ol').children().should('have.length', 3);
+  });
+
+  it("Uses subtext tags appropriately", () => {
+    cy.get('ol li').first()
+    .contains("Turning H2O into wine, and the health benefits of Resveratrol (C14H12O3.)")
+    
+    cy.get('ol li').first()
+      .children('sub').should('have.length', 4);
+
+  });
+
+  it("Uses supertext tags appropriately", () => {
+    cy.get('ol li')
+    .contains("at temperatures exceeding 33°C (91.4°F)")
+    .children('sup').should('have.length', 2);
+  })
+
+  it("Uses abbreviation tags appropriately", () => {
+    cy.get('ol li')
+    .contains("HTML and CSS")
+    
+    cy.get('ol li').children('abbr').should('have.length', 2);
+    cy.get('ol li abbr').first().should($abbr => {
+      const test = "Hypertext Markup Language"
+      expect($abbr.attr('title').toUpperCase()).to.equal(test.toUpperCase())
+    })
+    cy.get('ol li abbr').last().should($abbr => {
+      const test = "Cascading Style Sheets"
+      expect($abbr.attr('title').toUpperCase()).to.equal(test.toUpperCase())
+    })
+  });
+
   it("Uses an emphasis tag appropriately");
 
   it("Contains a definition list");
