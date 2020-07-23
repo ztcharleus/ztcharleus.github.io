@@ -108,15 +108,32 @@ describe("Lab 2", () => {
     })
   });
 
-  it("Uses an emphasis tag appropriately");
+  it("Uses an emphasis tag appropriately", () => {
+    cy.get('em').should('have.length', 2);
+  });
+
+  it("Does not use old-format emphasis tags", () => {
+    cy.get('i').should('have.length', 0);
+    cy.get('b').should('have.length', 0);
+  });
+  
+  it("Contains a blockquote footer", () => {
+    cy.get('blockquote').should(($bq) => {
+      const text = 'fear the turtle';
+      console.log($bq);
+      console.log($bq.text());
+      expect($bq.text().replace(/"/g,"").toUpperCase()).to.equal(text.toUpperCase());
+    })
+  });
+
+  it("Has a correctly-formatted link to a research page", () => {
+    cy.get('a').last().should('have.attr', 'href', 'http://umd.edu');
+  });
 
   it("Contains a definition list");
   it("Has correctly structured definition list headers");
   it("Has correctly structured definition list content");
-
-  it("Has a correctly-formatted link to a research page");
-
-  it("Contains a blockquote footer");
+  
 
   it("Uses paragraph tags to structure all loose page text");
 });
