@@ -130,10 +130,19 @@ describe("Lab 2", () => {
     cy.get('a').last().should('have.attr', 'href', 'http://umd.edu');
   });
 
-  it("Contains a definition list");
-  it("Has correctly structured definition list headers");
-  it("Has correctly structured definition list content");
-  
+  it("Contains a definition list with three entries", () => {
+    cy.get('dl')
+      .children()
+      .should('have.length', 6)
+      .get('dl dt')
+      .should('have.length', 3)
+      .get('dl dd:nth-of-type(3)')
+      .contains('the screaming noise')
+      .get('dl dt:nth-of-type(1)')
+      .contains('Polar')
+  });
 
-  it("Uses paragraph tags to structure all loose page text");
+  it("Uses paragraph tags to structure all loose page text", () => {
+    cy.get("p").should('have.length', 13);
+  });
 });
