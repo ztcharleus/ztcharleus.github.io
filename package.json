@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node lab_utils/html_validation_error_gen.js",
-    "test2": "node lab_utils/html_validation_error_gen.js && node_modules/.bin/cypress open",
+    "test": "node --experimental-modules lab_utils/html_validation_error_gen.js",
+    "test2": "node --experimental-modules lab_utils/html_validation_error_gen.js && node_modules/.bin/cypress open",
     "start": "nodemon server.js"
   },
   "author": "Alex Leitch",
