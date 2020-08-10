@@ -1,42 +1,59 @@
-"use strict";
-import { spawn } from "child_process";
+import dotenv from 'dotenv';
 
-import recursiveReaddir from "recursive-readdir";
-import chalk from "chalk";
+import { spawn } from 'child_process';
+import fs from 'fs';
+import recursiveReaddir from 'recursive-readdir';
+import chalk from 'chalk';
+import path from 'path';
 
 import {
   processHTML,
   excludeNonHTML,
   excludeAnswerKey,
   severeErrorCheck
-} from "./functions.js";
+  // generateFixtureForTests
+} from './functions.js';
 
-const stringOutput = {};
+dotenv.config();
+const __dirname = path.resolve();
 
-recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
-  .then((data) => {
+function generateFixtureForTests() {
+  const obj = JSON.stringify({
+    name: process.env.NAME,
+    email: process.env.EMAIL,
+    test_context: process.env.CONTEXT
+  });
+
+  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, obj, (err, data) => {
+    if (err) { throw err; }
+    console.log('Fixtures updated for testing');
+  });
+}
+
+// write
+generateFixtureForTests();
+
+recursiveReaddir('./public', [excludeNonHTML, excludeAnswerKey, '.DS_Store'])
+  .then((data) =>
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
-    return Promise.all(data.map((m) => processHTML(m)));
-  })
+    Promise.all(data.map((m) => processHTML(m))))
   .then((data) => data.filter((f) => f.errors.length > 0))
-  .then((data) =>
-    data.map((m) => {
-      m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
-      return m;
-    })
-  )
+  .then((data) => data.map((m) => {
+    m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
+    return m;
+  }))
   .then((data) => data.map((m) => severeErrorCheck(m)))
   .then((data) => {
     console.log(
-      chalk.bgCyan.bold("Preliminary HTML validation check complete")
+      chalk.bgCyan.bold('Preliminary HTML validation check complete')
     );
     // if any document has severe errors, list it and put it in a table
     // and block cypress launch
     let blockCypress; // TODO: add a cypress launch
 
     if (data.length > 0) {
-      const str = data.length === 1 ? "document has" : "documents have";
+      const str = data.length === 1 ? 'document has' : 'documents have';
       console.log(chalk.yellow.bold(data.length, `${str} validation errors`));
       data.forEach((d) => {
         console.log(
@@ -47,8 +64,8 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
       data.forEach((d) => {
         if (d.severe.length > 0) {
           blockCypress = true;
-          console.log('\n')
-          console.log(chalk.red.bold(`${d.title} has breaking errors`))
+          console.log('\n');
+          console.log(chalk.red.bold(`${d.title} has breaking errors`));
           console.table(d.severe);
           console.error(
             `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
@@ -59,12 +76,12 @@ recursiveReaddir("./public", [excludeNonHTML, excludeAnswerKey, ".DS_Store"])
     } else {
       // Else green to go and good luck with lab problems.
       console.log(
-        chalk.green.bold("No invalid HTML detected! Good luck with your lab.")
+        chalk.green.bold('No invalid HTML detected! Good luck with your lab.')
       );
     }
 
-    if(!blockCypress){
-      spawn("node_modules/.bin/cypress", ["open"]);
+    if (!blockCypress) {
+      spawn('node_modules/.bin/cypress', ['open']);
     }
   })
   .catch((err) => console.log(err));
