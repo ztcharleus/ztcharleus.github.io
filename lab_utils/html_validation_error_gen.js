@@ -5,6 +5,8 @@ import fs from 'fs';
 import recursiveReaddir from 'recursive-readdir';
 import chalk from 'chalk';
 import path from 'path';
+import validator from 'email-validator';
+import strings from './text.js';
 
 import {
   processHTML,
@@ -18,70 +20,79 @@ dotenv.config();
 const __dirname = path.resolve();
 
 function generateFixtureForTests() {
-  const obj = JSON.stringify({
+  const data = JSON.stringify({
     name: process.env.NAME,
     email: process.env.EMAIL,
     test_context: process.env.CONTEXT
   });
 
-  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, obj, (err, data) => {
-    if (err) { throw err; }
-    console.log('Fixtures updated for testing');
-  });
+  if (process.env.NAME === 'your name') {
+    console.log(chalk.bgRedBright.white(strings.nameWarning));
+    return undefined;
+  } if (!validator.validate(process.env.EMAIL)) {
+    console.log(chalk.bgRedBright.white(strings.emailWarning));
+    return undefined;
+  }
+  return data;
 }
 
 // write
-generateFixtureForTests();
-
-recursiveReaddir('./public', [excludeNonHTML, excludeAnswerKey, '.DS_Store'])
-  .then((data) =>
+const fixtureTextObject = generateFixtureForTests();
+if (fixtureTextObject) {
+  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, data, (err, d) => {
+    if (err) { throw err; }
+    console.log('Fixtures updated for testing');
+  });
+  recursiveReaddir('./public', [excludeNonHTML, excludeAnswerKey, '.DS_Store'])
+    .then((data) =>
     // for each file in data, we're going to want to run the validator and output an updated file.
     // this needs to happen asynchronously because each process is its own thing
-    Promise.all(data.map((m) => processHTML(m))))
-  .then((data) => data.filter((f) => f.errors.length > 0))
-  .then((data) => data.map((m) => {
-    m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
-    return m;
-  }))
-  .then((data) => data.map((m) => severeErrorCheck(m)))
-  .then((data) => {
-    console.log(
-      chalk.bgCyan.bold('Preliminary HTML validation check complete')
-    );
-    // if any document has severe errors, list it and put it in a table
-    // and block cypress launch
-    let blockCypress; // TODO: add a cypress launch
-
-    if (data.length > 0) {
-      const str = data.length === 1 ? 'document has' : 'documents have';
-      console.log(chalk.yellow.bold(data.length, `${str} validation errors`));
-      data.forEach((d) => {
-        console.log(
-          chalk.yellow(` --- ${d.title}  ${d.errors.length}`)
-        );
-      });
-
-      data.forEach((d) => {
-        if (d.severe.length > 0) {
-          blockCypress = true;
-          console.log('\n');
-          console.log(chalk.red.bold(`${d.title} has breaking errors`));
-          console.table(d.severe);
-          console.error(
-            `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
-          );
-          blockCypress === true;
-        }
-      });
-    } else {
-      // Else green to go and good luck with lab problems.
+      Promise.all(data.map((m) => processHTML(m))))
+    .then((data) => data.filter((f) => f.errors.length > 0))
+    .then((data) => data.map((m) => {
+      m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
+      return m;
+    }))
+    .then((data) => data.map((m) => severeErrorCheck(m)))
+    .then((data) => {
       console.log(
-        chalk.green.bold('No invalid HTML detected! Good luck with your lab.')
+        chalk.bgCyan.bold('Preliminary HTML validation check complete')
       );
-    }
+      // if any document has severe errors, list it and put it in a table
+      // and block cypress launch
+      let blockCypress; // TODO: add a cypress launch
 
-    if (!blockCypress) {
-      spawn('node_modules/.bin/cypress', ['open']);
-    }
-  })
-  .catch((err) => console.log(err));
+      if (data.length > 0) {
+        const str = data.length === 1 ? 'document has' : 'documents have';
+        console.log(chalk.yellow.bold(data.length, `${str} validation errors`));
+        data.forEach((d) => {
+          console.log(
+            chalk.yellow(` --- ${d.title}  ${d.errors.length}`)
+          );
+        });
+
+        data.forEach((d) => {
+          if (d.severe.length > 0) {
+            blockCypress = true;
+            console.log('\n');
+            console.log(chalk.red.bold(`${d.title} has breaking errors`));
+            console.table(d.severe);
+            console.error(
+              `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
+            );
+            blockCypress === true;
+          }
+        });
+      } else {
+      // Else green to go and good luck with lab problems.
+        console.log(
+          chalk.green.bold('No invalid HTML detected! Good luck with your lab.')
+        );
+      }
+
+      if (!blockCypress) {
+        spawn('node_modules/.bin/cypress', ['open']);
+      }
+    })
+    .catch((err) => console.log(err));
+}
