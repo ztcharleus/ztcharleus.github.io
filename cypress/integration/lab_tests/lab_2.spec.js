@@ -3,7 +3,7 @@ function headAndBodyCheck(str) {
 }
 
 describe("Lab 2", () => {
-  const labUrl = "/answer_key/lab_2/";
+  const labUrl = `${json.test_context}/lab_2/`;
   // TODO: WRITE OUT VALIDATION ERRORS IN A LEGIBLE FORMAT
   // Guidelines: https://docs.cypress.io/api/cypress-api/cypress-log.html#Examples\
 

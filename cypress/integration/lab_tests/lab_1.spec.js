@@ -1,7 +1,7 @@
 describe("Lab 1", () => {
   it("Successfully loads", () => {
     cy.fixture("test_values").then((json) => {
-      cy.visit(`${json.document_prefix}/lab_1/`); // change URL to match your dev URL
+      cy.visit(`${json.test_context}/lab_1/`); // change URL to match your dev URL
       cy.htmlvalidate();
     })
   });
@@ -17,13 +17,6 @@ describe("Lab 1", () => {
     cy.fixture("test_values").then((json) => {
       cy.get("body h1")
         .contains(json.name);
-    });
-  });
-
-  it("Contains a paragraph with lorem ipsum in it", () => {
-    cy.fixture("test_values").then((json) => {
-      cy.get("p")
-        .contains(json.lipsum);
     });
   });
 
