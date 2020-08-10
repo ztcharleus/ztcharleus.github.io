@@ -1,6 +1,1 @@
-{
-    "name": "Alex Leitch",
-    "email": "",
-    "document_prefix": "/answer_key",
-    "lipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere volutpat aliquet. Cras nec urna justo. Donec sed dapibus neque. Aliquam tempor feugiat odio sit amet scelerisque. Nam purus lorem, venenatis eu mattis eu, ultricies eu enim. Aliquam erat volutpat. Etiam at dapibus nisi. In molestie, lacus vitae mollis vehicula, quam purus venenatis neque, in gravida ipsum metus ut libero. Fusce enim magna, lacinia ut sollicitudin non, vehicula at ligula."
-  }
+{"name":"your name","email":"email address"}
