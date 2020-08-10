@@ -5,7 +5,7 @@ Most of programming is debugging and very carefully following instructions.
 Let's do this together.
 
 - Your node installation must be above version 13.0
-    - To check your version of Node.js, open Terminal (or another CLI), and type the command node -v. Press Enter. 
+    - To check your version of Node.js, open Terminal (or another CLI), and type the command node --version. Press Enter. 
 
 - Sign up for a github.com account
 - Sign up for a heroku.com account
