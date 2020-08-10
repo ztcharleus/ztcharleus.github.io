@@ -1,4 +1,4 @@
-describe('Lab 2', () => {
+describe('Lab 3', () => {
   const labUrl = `${json.test_context}/lab_2/`;
 
   it('Successfully loads with valid HTML', () => {

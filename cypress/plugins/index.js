@@ -21,17 +21,18 @@
 //   // htmlvalidate.install(on);
 // }
 
-const htmlvalidate = require("cypress-html-validate/dist/plugin");
+const htmlvalidate = require('cypress-html-validate/dist/plugin');
+
 const htmlValidateConfig = {
   rules: {
-    "close-order": "error",
+    'close-order': 'error',
     void: [
-      "warn",
+      'warn',
       {
-        style: "omit",
-      },
-    ],
-  },
+        style: 'omit'
+      }
+    ]
+  }
 };
 
 module.exports = (on) => {

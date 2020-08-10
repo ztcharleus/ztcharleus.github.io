@@ -1,20 +1,21 @@
 // These are our required libraries to make the server work.
-
-import express from "express";
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
+import express from 'express';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static('public'));
 
-app.route("/api")
+app.route('/api')
   .get((req, res) => {
-      console.log("GET request detected");
+    console.log('GET request detected');
   })
   .post((req, res) => {
-    console.log("POST request detected");
+    console.log('POST request detected');
   });
 
 app.listen(port, () => {

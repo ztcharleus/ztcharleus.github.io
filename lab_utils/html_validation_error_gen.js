@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import dotenv from 'dotenv';
 
 import { spawn } from 'child_process';
@@ -37,9 +38,9 @@ function generateFixtureForTests() {
 }
 
 // write
-const fixtureTextObject = generateFixtureForTests();
-if (fixtureTextObject) {
-  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, data, (err, d) => {
+const obj = generateFixtureForTests();
+if (obj) {
+  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, obj, (err, d) => {
     if (err) { throw err; }
     console.log('Fixtures updated for testing');
   });
