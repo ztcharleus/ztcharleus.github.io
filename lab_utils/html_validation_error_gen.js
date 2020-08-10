@@ -40,15 +40,15 @@ function generateFixtureForTests() {
 // write
 const obj = generateFixtureForTests();
 if (obj) {
-  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, obj, (err, d) => {
-    if (err) { throw err; }
-    console.log('Fixtures updated for testing');
+  fs.writeFile(`${__dirname}/cypress/fixtures/test_values.json`, obj, (err) => {
+    if (err) { throw err; } else {
+      console.log('Fixtures updated for testing');
+    }
   });
   recursiveReaddir('./public', [excludeNonHTML, excludeAnswerKey, '.DS_Store'])
-    .then((data) =>
-    // for each file in data, we're going to want to run the validator and output an updated file.
-    // this needs to happen asynchronously because each process is its own thing
-      Promise.all(data.map((m) => processHTML(m))))
+  // for each file in data, we're going to want to run the validator and output an updated file.
+  // this needs to happen asynchronously because each process is its own thing
+    .then((data) => Promise.all(data.map((m) => processHTML(m))))
     .then((data) => data.filter((f) => f.errors.length > 0))
     .then((data) => data.map((m) => {
       m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
@@ -81,7 +81,6 @@ if (obj) {
             console.error(
               `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
             );
-            blockCypress === true;
           }
         });
       } else {
