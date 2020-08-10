@@ -9,8 +9,7 @@ public/answer_key
 # Example specs from Cypress
 # -------------------------------------------------
 cypress/integration/examples
-cypress/fixtures/example.json
-cypress/fixtures/generated/*
+cypress/fixtures/*
 
 # -------------------------------------------------
 # Misc CSS Caching
