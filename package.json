@@ -17,6 +17,7 @@
     "cypress-html-validate": "^1.2.2",
     "cypress-wait-until": "^1.7.1",
     "dotenv": "^8.2.0",
+    "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "html-validate": "^3.0.0",
     "node-fetch": "^2.6.0",
