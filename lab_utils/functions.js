@@ -1,9 +1,17 @@
-import path from "path";
-import util from "util";
-import fs from "fs";
-import { exec } from "child_process";
+import path from 'path';
+import util from 'util';
+import fs from 'fs';
+import { exec } from 'child_process';
 
 const execPr = util.promisify(exec);
+
+async function generateFixtureForTests() {
+  fs.readFile('../.config', (err, data) => {
+    if (err) { throw err; }
+    const json = JSON.parse(data);
+    console.log(json);
+  });
+}
 
 async function processHTML(filename) {
   // fire HTML-Validate process
@@ -18,20 +26,20 @@ async function processHTML(filename) {
   const errors = cleanTerminalOutput(terminalOutput);
   return {
     filename,
-    errors,
+    errors
   };
 }
 
 function errorToObject(err) {
   return err
-    .split("  ")
+    .split('  ')
     .map((m) => m.trim())
-    .filter((f) => f.length > 0 && f !== "error")
+    .filter((f) => f.length > 0 && f !== 'error')
     .reduce((acc, curr, idx) => {
       const idxChr = {
-        0: "Line number in editor",
-        1: "Error",
-        2: "Error Type",
+        0: 'Line number in editor',
+        1: 'Error',
+        2: 'Error Type'
       };
       acc[idxChr[idx]] = curr;
       return acc;
@@ -39,16 +47,16 @@ function errorToObject(err) {
 }
 
 function excludeNonHTML(file, stats) {
-  return path.extname(file).length && path.extname(file) !== ".html";
+  return path.extname(file).length && path.extname(file) !== '.html';
 }
 
 // TODO: comment this in before export
 function excludeAnswerKey(file, stats) {
-  // return stats.isDirectory() && path.basename(file) == "answer_key";
+  return stats.isDirectory() && path.basename(file) === 'answer_key';
 }
 
 function cleanTerminalOutput(string) {
-  const nS1 = string.split("\n");
+  const nS1 = string.split('\n');
   const d = nS1.filter((f) => f.match(/\d+:\d+/g));
   const arr = d.map((m) => m.trim());
   return arr.map((m) => errorToObject(m));
@@ -56,15 +64,13 @@ function cleanTerminalOutput(string) {
 
 function partition(array, isValid) {
   return array.reduce(
-    ([pass, fail], elem) => {
-      return isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
-    },
+    ([pass, fail], elem) => (isValid(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]]),
     [[], []]
   );
 }
 
 function severeErrorTest(f) {
-  return f["Error Type"] === "element-required-content";
+  return f['Error Type'] === 'element-required-content';
 }
 
 function severeErrorCheck(document) {
@@ -72,7 +78,7 @@ function severeErrorCheck(document) {
   return {
     ...document,
     errors: splitArray[1],
-    severe: splitArray[0],
+    severe: splitArray[0]
   };
 }
 
@@ -83,5 +89,6 @@ export {
   cleanTerminalOutput,
   partition,
   severeErrorTest,
-  severeErrorCheck
+  severeErrorCheck,
+  generateFixtureForTests
 };
