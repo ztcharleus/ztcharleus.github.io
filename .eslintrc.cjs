@@ -34,7 +34,6 @@ module.exports = {
     "no-extra-parens": 0,
     "brace-style": 1,
     "object-curly-spacing": 0,
-    "react/jsx-uses-vars": 1,
     "no-mixed-spaces-and-tabs": 1,
     "no-trailing-spaces": 1,
     "no-unused-vars": 1,
@@ -57,7 +56,6 @@ module.exports = {
       }
     ],
     "jsx-a11y/href-no-hash": 0,
-    "react/jsx-curly-spacing": 1,
     "react/prefer-es6-class": [
       0,
       "never"
