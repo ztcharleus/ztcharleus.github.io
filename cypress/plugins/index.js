@@ -26,6 +26,8 @@ const htmlvalidate = require('cypress-html-validate/dist/plugin');
 const htmlValidateConfig = {
   rules: {
     'close-order': 'error',
+    'no-conditional-comment': 0,
+    'require-sri': 0,
     void: [
       'warn',
       {
