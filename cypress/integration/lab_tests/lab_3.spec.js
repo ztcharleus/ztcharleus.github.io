@@ -1,9 +1,10 @@
 describe('Lab 3', () => {
-  const labUrl = `${json.test_context}/lab_2/`;
-
   it('Successfully loads with valid HTML', () => {
-    cy.visit(labUrl); // change URL to match your dev URL
-    cy.htmlvalidate();
+    cy.fixture('test_values').then((json) => {
+      const labUrl = `${json.test_context || ''}/lab_3/`;
+      cy.visit(labUrl); // change URL to match your dev URL
+      cy.htmlvalidate();
+    });
   });
 
   it('Should have a header block', () => {
@@ -22,7 +23,7 @@ describe('Lab 3', () => {
     cy.get('.aside');
   });
 
-  it('The aside block should be correctly structured', () => {
+  it('The aside block should be correctly structured with four images and their links', () => {
     cy.get('.aside a')
       .should('have.length', 4);
 
@@ -35,15 +36,27 @@ describe('Lab 3', () => {
   });
 
   it('All images should have descriptive alt text', () => {
-    const img = cy.get('.aside a img')
-      .should('have.length', 4);
-    img.forEach((i) => {
-      i.should('have.attr', 'alt')
-        .then((text) => {
-          expect(text.length).to.not.be.greaterThan(160);
-          expect(text.length).to.be.greaterThan(0);
-        });
-    });
+    cy.get('.aside')
+      .find('img')
+      .should('have.length', 4)
+      .each(($i) => {
+        cy.log($i);
+        expect($i).to.have.attr('alt');
+        const alt = Cypress.$($i).attr('alt');
+        expect(alt.length).to.be.greaterThan(0);
+        expect(alt.length).to.be.lessThan(140);
+      });
+  });
+
+  it('Should display valid images', () => {
+    cy.get('.aside')
+      .find('img')
+      .should('have.length', 4)
+      .should('be.visible')
+      .each(($i) => {
+        expect($i[0].naturalWidth, 'Your image link is broken! Try fixing your <img> src').to.be.greaterThan(0);
+        expect($i[0].naturalWidth).to.be.lessThan(481);
+      });
   });
 
   it('Main block should contain some lipsum', () => {
