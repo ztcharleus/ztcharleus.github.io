@@ -24,10 +24,13 @@ function generateFixtureForTests() {
   const data = JSON.stringify({
     name: process.env.NAME,
     email: process.env.EMAIL,
-    test_context: process.env.CONTEXT || ''
+    test_context: (process.env.CONTEXT) ? process.env.CONTEXT : ''
   });
 
-  if (process.env.NAME === 'your name') {
+  if (process.env.CONTEXT) {
+    chalk.bgBlue.white(process.env.CONTEXT);
+  }
+  if (!process.env.NAME || process.env.NAME === 'your name') {
     console.log(chalk.bgRedBright.white(strings.nameWarning));
     return undefined;
   } if (!validator.validate(process.env.EMAIL)) {
