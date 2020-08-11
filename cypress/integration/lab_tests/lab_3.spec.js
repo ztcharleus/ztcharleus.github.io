@@ -23,6 +23,12 @@ describe('Lab 3', () => {
     cy.get('.aside');
   });
 
+  it('Should have a nav element with a list of places to go', () => {
+    cy.get('nav');
+    cy.get('nav ul');
+    cy.get('nav ul li').should('have.length', 5);
+  });
+
   it('The aside block should be correctly structured with four images and their links', () => {
     cy.get('.aside a')
       .should('have.length', 4);
@@ -36,9 +42,8 @@ describe('Lab 3', () => {
   });
 
   it('All images should have descriptive alt text', () => {
-    cy.get('.aside')
-      .find('img')
-      .should('have.length', 4)
+    cy.get('img')
+      .should('have.length', 5)
       .each(($i) => {
         cy.log($i);
         expect($i).to.have.attr('alt');
@@ -49,13 +54,20 @@ describe('Lab 3', () => {
   });
 
   it('Should display valid images', () => {
-    cy.get('.aside')
-      .find('img')
-      .should('have.length', 4)
+    cy.get('img')
+      .should('have.length', 5)
       .should('be.visible')
       .each(($i) => {
         expect($i[0].naturalWidth, 'Your image link is broken! Try fixing your <img> src').to.be.greaterThan(0);
-        expect($i[0].naturalWidth).to.be.lessThan(481);
+      });
+  });
+
+  it('Should have a reasonably sized header image', () => {
+    cy.get('.header img')
+      .each(($i) => {
+        const img = $i.css('height');
+        const img2Number = Number(img.substring(0, img.indexOf('px')));
+        expect(img2Number).to.be.lessThan(100);
       });
   });
 
