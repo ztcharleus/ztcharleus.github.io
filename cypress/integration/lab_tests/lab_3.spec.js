@@ -75,7 +75,10 @@ describe('Lab 3', () => {
     cy.fixture('test_values').then((json) => {
       cy.get('.footer').contains(json.name);
     });
-    cy.get('body').not.contains('This fake website example is CC0 — any part of this code may be reused in any way you wish. Original example written by Chris Mills, 2016.');
-    cy.get('body').not.contains('This website example has been written by Sam Cap, 2020');
+
+    cy.contains('This fake website example is CC0 — any part of this code may be reused in any way you wish. Original example written by Chris Mills, 2016.')
+      .should('not.exist');
+    cy.contains('This website example has been written by Sam Cap, 2020')
+      .should('not.exist');
   });
 });
