@@ -24,7 +24,7 @@ function generateFixtureForTests() {
   const data = JSON.stringify({
     name: process.env.NAME,
     email: process.env.EMAIL,
-    test_context: process.env.CONTEXT
+    test_context: process.env.CONTEXT || ''
   });
 
   if (process.env.NAME === 'your name') {
