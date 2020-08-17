@@ -9,6 +9,9 @@
     "test2": "node --experimental-modules lab_utils/html_validation_error_gen.js && node_modules/.bin/cypress open",
     "start": "nodemon server.js"
   },
+  "engines": {
+    "node": "13.x"
+  },
   "author": "Alex Leitch",
   "license": "ISC",
   "dependencies": {
