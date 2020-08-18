@@ -21,24 +21,16 @@ describe('Lab 4', () => {
         expect(rows).to.be.greaterThan(4);
         expect(cols).to.be.greaterThan(32);
       });
-    //   .should('have.attr', 'rows', ($ta) => {
-    // //   });
-    // '
-
-    // ', ($txt) => {
-    //     expect($txt).to.have
-    // })
-    //   .should('be.gt', 4)
   });
 
   it('Should have an input field for text, with an attached label element', () => {
     cy.get('form input[type=text]')
-      .its('name')
-      .then(($name) => {
+      .then(($txt) => {
+        const name = $txt.attr('id');
         cy.get('form label')
-          .its('for')
-          .then(($for) => {
-            expect($for).equals($name);
+          .then(($lbl) => {
+            const fr = $lbl.attr('for');
+            expect(fr).equals(name);
           });
       });
   });
