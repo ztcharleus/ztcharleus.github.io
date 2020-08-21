@@ -35,7 +35,8 @@ describe('Lab 4', () => {
       });
   });
 
-  //   it('Should POST on submit to the /api endpoint', () => {});
-
-//   it('Should receive a reply from the server', () => {});
+  it('Should use the submit button to POST material to the /api endpoint', () => {
+    cy.get('button[type=submit]')
+      .click();
+  });
 });
