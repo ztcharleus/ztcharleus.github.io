@@ -38,5 +38,8 @@ describe('Lab 4', () => {
   it('Should use the submit button to POST material to the /api endpoint', () => {
     cy.get('button[type=submit]')
       .click();
+    // TODO: MAKE SURE THIS CHECKS A NEW PAGE
+    // TODO: ASSIGNMENT 1 SPEC
+    cy.contains('hello world', { matchCase: false });
   });
 });
