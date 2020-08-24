@@ -7,7 +7,6 @@ describe('Lab 4', () => {
     });
   });
 
-  it('Should contain a copy of the lab CSS file', () => {});
   it('Should include an HTML form', () => {
     cy.get('form');
   });
@@ -36,10 +35,21 @@ describe('Lab 4', () => {
   });
 
   it('Should use the submit button to POST material to the /api endpoint', () => {
+    cy.get('form').should('have.attr', 'method', 'post');
     cy.get('button[type=submit]')
       .click();
     // TODO: MAKE SURE THIS CHECKS A NEW PAGE
     // TODO: ASSIGNMENT 1 SPEC
     cy.contains('hello world', { matchCase: false });
+  });
+
+  it('Should receive an HTML element containing "Hello World" from the server', () => {
+    cy.fixture('test_values').then((json) => {
+      const labUrl = `${json.test_context || ''}/lab_4/`;
+      cy.visit(labUrl); // change URL to match your dev URL
+      cy.get('button[type=submit]')
+        .click();
+      cy.contains('hello world', { matchCase: false });
+    });
   });
 });
