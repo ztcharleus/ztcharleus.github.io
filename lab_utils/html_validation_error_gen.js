@@ -53,10 +53,10 @@ if (obj) {
   // this needs to happen asynchronously because each process is its own thing
     .then((data) => Promise.all(data.map((m) => processHTML(m))))
     .then((data) => data.filter((f) => f.errors.length > 0))
-    .then((data) => data.map((m) => {
-      m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
-      return m;
-    }))
+    // .then((data) => data.map((m) => {
+    //   m.title = m.filename.match(/lab_\d+/g)[0]; // TODO: Replace this with a config file
+    //   return m;
+    // }))
     .then((data) => data.map((m) => severeErrorCheck(m)))
     .then((data) => {
       console.log(
