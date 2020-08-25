@@ -14,3 +14,7 @@ h3 {
 a {
 color: rgb(53 91 202);
 }
+
+a:visited{
+    color:rgb(133 101 255);
+}
