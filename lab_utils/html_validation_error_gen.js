@@ -84,7 +84,7 @@ if (obj) {
       }
 
       if (!blockCypress) {
-        spawn('node_modules/.bin/cypress', ['open']);
+        spawn('node_modules/.bin/cypress', ['open'], {shell: process.platform === 'win32'});
       }
     })
     .catch((err) => console.log(err));
