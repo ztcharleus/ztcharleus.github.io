@@ -65,31 +65,21 @@ if (obj) {
       // if any document has severe errors, list it and put it in a table
       // and block cypress launch
       let blockCypress; // TODO: add a cypress launch
-
-      if (data.length > 0) {
-        const str = data.length === 1 ? 'document has' : 'documents have';
-        console.log(chalk.yellow.bold(data.length, `${str} validation errors`));
-        data.forEach((d) => {
-          console.log(
-            chalk.yellow(` --- ${d.title}  ${d.errors.length}`)
+      const severe = data.filter((f) => f.severe.length > 0);
+      if (severe.length > 0) {
+        severe.forEach((d) => {
+          blockCypress = true;
+          console.log('\n');
+          console.log(chalk.red.bold(`${d.title} has breaking errors`));
+          console.table(d.severe);
+          console.error(
+            `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
           );
-        });
-
-        data.forEach((d) => {
-          if (d.severe.length > 0) {
-            blockCypress = true;
-            console.log('\n');
-            console.log(chalk.red.bold(`${d.title} has breaking errors`));
-            console.table(d.severe);
-            console.error(
-              `Please repair your HTML in ${d.title} before proceeding with the lab.\n`
-            );
-          }
         });
       } else {
       // Else green to go and good luck with lab problems.
         console.log(
-          chalk.green.bold('No invalid HTML detected! Good luck with your lab.')
+          chalk.green.bold('No major problems detected! Good luck with your lab.')
         );
       }
 
