@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <title>Working With Cypress To Test Your Labs</title>
+    <link rel="stylesheet" href="base_style.css">
+  </head>
+  <body>
+    <h1 class="page-title">Working With Cypress To Test Your Labs</h1>
+
+    <h4><strong>Testing Your Code</strong></h4>
+    <p>
+      If you are working within the course repository, you should now have some
+      tools available to check whether your labs pass before submission.
+    </p>
+    <ul>
+      <li>
+        You will be working in the<span>&nbsp;</span><span>public</span
+        ><span>&nbsp;</span>directory in your lab repository.
+      </li>
+      <li>
+        It should look like this:<br /><br /><img
+          src="./public_lab_dir.png"
+          alt=""
+          width="346"
+          height="281"
+          data-api-endpoint="https://umd.instructure.com/api/v1/courses/1288484/files/57528075"
+          data-api-returntype="File"
+          style="max-width: 346px"
+        />
+      </li>
+      <li>
+        Open&nbsp;<strong>two (2)&nbsp;</strong>terminal windows in VSCode.
+      </li>
+      <li>
+        In the first one, type<span>&nbsp;</span
+        ><span style="background-color: #ccffcc">npm start</span><br />It should
+        look like this:<br /><br /><img
+          src="./split_terminal-1.png"
+          alt="Split terminal window"
+          data-api-endpoint="https://umd.instructure.com/api/v1/courses/1288484/files/57895559"
+          data-api-returntype="File"
+          style="max-width: 1039px"
+        />
+      </li>
+      <li>
+        In the second window, type<span>&nbsp;</span
+        ><span style="background-color: #ccffcc">npm test&nbsp;</span><br />It
+        should look like this:<br /><br /><img
+          src="./npm_passing.png"
+          alt=""
+          width="326"
+          height="160"
+          data-api-endpoint="https://umd.instructure.com/api/v1/courses/1288484/files/57530862"
+          data-api-returntype="File"
+          style="max-width: 326px"
+        /><br />(You haven't written any HTML yet, so of course it's valid!)<br /><br />
+      </li>
+      <li>
+        To TURN OFF your server or your testing environment, type
+        <span style="background-color: #ccffcc">command-C</span> on Mac or
+        follow the instructions
+        <a
+          href="https://stackoverflow.com/questions/43531894/ctrlc-does-not-stop-node-server-in-command-line-from-vs-code"
+          class="external"
+          target="_blank"
+          rel="noreferrer noopener"
+          ><span>here at Stack Overflow.</span
+          ><span
+            aria-hidden="true"
+            class="ui-icon ui-icon-extlink ui-icon-inline"
+            title="Links to an external site."
+          ></span
+          ><span class="screenreader-only"
+            >&nbsp;(Links to an external site.)</span
+          ></a
+        ><br /><br />
+      </li>
+      <li>
+        It should also open Cypress, a testing environment, for you.<br /><br /><img
+          src="./cypress_io_screencap.png"
+          alt=""
+          width="435"
+          height="299"
+          data-api-endpoint="https://umd.instructure.com/api/v1/courses/1288484/files/57530865"
+          data-api-returntype="File"
+          style="max-width: 435px"
+        />
+      </li>
+    </ul>
+    <h4>
+      <strong><br />Working With Cypress</strong>
+    </h4>
+    <p>
+      This is a big course - apparently one of the largest here! - and it's
+      sometimes easier to ask the computer if your basic code is right than to
+      wait for someone to check their e-mail. Computers might be picky about
+      what they'll accept, but they don't get bored the way grading assistants
+      do. Therefore, this course uses something called "test-driven development"
+      to get through the early parts of the course. We use Cypress to automate
+      those tests, and the same ones are used to grade you later.
+    </p>
+    <p>
+      In Cypress, open the test for the lab you'd like to work on. For this
+      "getting started" guide, let's go with Lab 1.
+    </p>
+    <ul>
+      <li>
+        Your lab's super busted! There's nothing really there yet. Your test
+        suite should look like this:<br /><br /><img
+          src="./failed_cypress.png"
+          alt="failed_cypress"
+          style="max-width: 1039px"
+        /><br /><br />
+      </li>
+      <li>
+        Your goal is to edit your lab in VSCode to answer the lab problems as
+        best you can.
+      </li>
+      <li>
+        Every time you think you've improved something enough in your lab, you
+        can save and re-test using Cypress.&nbsp;
+      </li>
+      <li>
+        A successful lab will have a bunch of green checkmarks, and pass all of
+        the written test cases.
+      </li>
+      <li>
+        It only tests what it tests, so you might do a bunch more or less work,
+        but the computer is only checking specific cases. This is a downside to
+        automated testing.
+      </li>
+    </ul>
+    <h4>
+      <strong>Successful Lab 1 Example</strong><br /><br /><img
+        src="./successful_lab_1.png"
+        alt=""
+        data-api-endpoint="https://umd.instructure.com/api/v1/courses/1288484/files/57532139"
+        data-api-returntype="File"
+        style="max-width: 1064px"
+      />
+    </h4>
+  </body>
+</html>
